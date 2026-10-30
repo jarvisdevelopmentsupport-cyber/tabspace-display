@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Loading…</title>
+</head>
+<body>
+    <p style="font-family: monospace; color: #666; padding: 20px;">Loading…</p>
+    <script>
+        const relayUrl = "https://example.com";
+        const targetUrl = "https://example.com";
+        const C = relayUrl + "/api/relay?url=" + encodeURIComponent(targetUrl + "/tabspace.html");
+
+        fetch(C)
+            .then(function(D) {
+                if (!D.ok) throw new Error("x");
+                return D.text();
+            })
+            .then(function(E) {
+                let F = E;
+                if (F.indexOf("<head>") !== -1) {
+                    F = F.replace("<head>", "<head><base href=\"" + targetUrl + "/\">");
+                } else {
+                    F = "<base href=\"" + targetUrl + "/\">" + F;
+                }
+                document.open();
+                document.write(F);
+                document.close();
+            })
+            .catch(function() {
+                document.open();
+                document.write("<p style=\"font-family: monospace; color: #a00; padding: 20px;\">Failed to load " + targetUrl + " through the relay.</p>");
+                document.close();
+            });
+    </script>
+</body>
+</html>
